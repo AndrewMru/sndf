@@ -23,8 +23,11 @@ import com.sndf.connection.message.IMessage;
  */
 public class ConnectionImpl implements IConnection
 {
+    private static final Object sIdLock = new Object();
+    private static final int INVALID_ID = -1;
+    
     private static int generationId = 0;
-    private int mConnectionId = generationId++;
+    private int mConnectionId = INVALID_ID;
 
     private final IStreamDecoderExFactory<IMessage> mDecoderFactory;
     private IStreamDecoderEx<IMessage> mMessageDecoder;
@@ -44,6 +47,8 @@ public class ConnectionImpl implements IConnection
 
     public ConnectionImpl(IStreamDecoderExFactory<IMessage> decoderFactory, IStreamEncoderFactory<IMessage> encoderFactory)
     {
+    	generateId();
+    	
         mReadBuffer = ByteBuffer.allocate(1024);
         mWriteBuffer = ByteBuffer.allocate(1024);
         
@@ -58,6 +63,14 @@ public class ConnectionImpl implements IConnection
     {
         this(new DefaultMessageDecoderFactory(), new DefaultMessageEncoderFactory());
     }
+    
+    private void generateId() 
+	{
+		synchronized (sIdLock) 
+		{
+			mConnectionId = generationId++;
+		}
+	}	
 
     @Override
     public int getId()
