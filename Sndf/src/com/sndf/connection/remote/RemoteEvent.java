@@ -3,11 +3,8 @@ package com.sndf.connection.remote;
 import java.util.HashMap;
 import java.util.Map;
 
-import android.annotation.SuppressLint;
-
 import com.sndf.connection.message.IMessage;
 
-@SuppressLint("UseSparseArrays")
 public class RemoteEvent extends IMessage
 {
     private static final long serialVersionUID = -5043866380833058448L;
